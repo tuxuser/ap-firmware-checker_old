@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  ap_firmware_checker_bot:
+    build: .
+    volumes:
+      - $PWD:/code
+    env_file:
+      - .env
+    environment:
+      PYTHONUNBUFFERED: 1
+    command: /code/checker.py
