@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+Discord bot to check for Analogue Pocket firmware updates
+"""
 import os
 import time
 import hashlib
@@ -15,6 +18,7 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN")
 CHANNEL_ID = int(os.environ.get("CHANNEL_ID"))
 
 CHECK_INTERVAL_SECS = POLLING_TIME_MINS * 60 # 1 minute
+CHECK_URL = 'https://www.analogue.co/support/pocket'
 
 class Event(object):
 
@@ -50,7 +54,6 @@ class Parse(HTMLParser):
 class ApUpdateChecker:
     def __init__(self):
         self.html_parser = Parse()
-        self.CHECK_URL = 'https://www.analogue.co/support/pocket'
         self.old_hash = None
         self.last_crawl = None
 
@@ -63,7 +66,7 @@ class ApUpdateChecker:
         return self.html_parser.fw_link
 
     def check_fw(self):
-        resp = requests.get(self.CHECK_URL)
+        resp = requests.get(CHECK_URL)
         if resp.status_code != 200:
             print(f"Error fetching support page: {resp.status_code=}")
             return requests.HTTPError(resp.status_code)
