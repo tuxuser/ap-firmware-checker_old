@@ -69,7 +69,7 @@ class ApUpdateChecker:
         resp = requests.get(CHECK_URL)
         if resp.status_code != 200:
             print(f"Error fetching support page: {resp.status_code=}")
-            return requests.HTTPError(resp.status_code)
+            return None
 
         self.last_crawl = datetime.now()
         page_content_str = resp.content.decode('utf8')
