@@ -161,18 +161,20 @@ class DiscordAPFWBot(discord.Client):
             f.write(new_page)
 
     async def fw_checker_task(self):
+	is_error_state = False
         await self.wait_until_ready()
         print('Checking for new firmwares...')
         while not self.is_closed():
             try:
                 result = self.checker.check_fw()
+		if_error_state = False
                 if result:
                     await self.send_message(f'New firmware available: {result}')
-            except NewConnectionError as exc:
-                print(f'Connection error while checking for new firmware: {exc}')
             except Exception as exc:
                 print(f'Error while checking for new firmware: {exc}')
-                await self.send_message(f'Unhandled error while fetching AP firmware updates: {exc}')
+		if not is_error_state:
+                    await self.send_message(f'Unhandled error while fetching AP firmware updates: {exc}')
+		is_error_state = True
 
             await asyncio.sleep(CHECK_INTERVAL_SECS)
 
